@@ -106,6 +106,51 @@ $ docker start DATABASE_NAME
     - `Username`: postgres
     - `Password`: docker
 
+#### Configurando TypeORM
+- Instalar a biblioteca `typeorm` e `pg`, onde
+  - `typeorm`: é a lib responsável pelo mapeamento das tabelas do banco de dados em formato JSON
+  - `pg`: é o driver do banco de dados, no nosso caso, Postgres. Dependendo do banco de dados utilizado, devemos acessar a documentação para saber qual driver utilizar
+```
+$ yarn add typeorm pg
+```
+- Configurar o TypeORM
+  - Para maiores detalhes, acessar o site [TypeORM](https://typeorm.io/#/)
+  - No menu `Connection > Using ormconfig.json` contém detalhes de como configurar essa lib.
+  - Como já informado anteriormente, essa biblioteca tem como objetivo fazer o mapeamento das tabelas de um banco de dados relacional em forma de objeto JavaScript, ou seja, JSON.
+  - Na raiz do projeto, crie o arquivo `ormconfig.json` com a seguinte configuração:
+```json
+{
+  "type": "postgres",
+  "host": "192.168.99.100",
+  "port": 5432,
+  "username": "postgres",
+  "password": "docker",
+  "database": "gostack_gobarber"
+}
+```
+- Configurar uma estrutura de conexão com o banco de dados
+  - Na raiz da pasta `src` crie a pasta `database` e dentro dessa pasta o arquivo `index.ts`
+    - `./src/database/index.ts`
+```typescript
+import { createConnection } from 'typeorm';
+
+createConnection();
+```
+- Criar o banco de dados `gostack_gobarber`
+  - Abra a ferramenta `DBeaver`
+  - Acesse o menu lateral esquerdo e clique com o botão direito do mouse sobre a conexão recentemente criada e selecione a opção `Create > Database`
+  - Na próxima janela, informe no campo `Database name` o nome do banco de dados, no nosso caso `gostack_gobarber` e clique em `OK`
+- Implementar a chamada do banco de dados no arquivo `./src/server.ts`
+```typescript
+...
+import './database';
+...
+```
+- Iniciar o serviço para testar conexão
+```
+$ yarn dev:server
+```
+
 ---
 
 ## Tecnologias utilizadas
@@ -113,6 +158,8 @@ $ docker start DATABASE_NAME
 #### Dependências de Projeto
 - [date-fns](https://yarnpkg.com/package/date-fns)
 - [express](https://yarnpkg.com/package/express)
+- [pg](https://yarnpkg.com/package/pg)
+- [typeorm](https://yarnpkg.com/package/typeorm)
 - [uuidv4](https://yarnpkg.com/package/uuidv4)
 
 #### Dependências de Desenvolvimento
@@ -143,6 +190,8 @@ $ git clone https://github.com/fabiosvf/bootcamp-gostack-11-nivel-02-iniciando-b
 $ yarn
 ```
 - Converta TypeScript em JavaScript
+  - Este comando é utilizado apenas para gerar o pacote para publicação no ambiente de produção.
+  - Durante o desevolvimento, para iniciar o serviço, utilize o próximo comando
 ```
 $ yarn tsc
 ou
