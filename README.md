@@ -239,6 +239,43 @@ $ yarn typeorm migration:revert
 $ yarn typeorm migration:show
 ```
 
+#### Criando model de agendamento
+- Referenciar o model `Appointment` à tabela `appointments` do banco de dados
+  - No arquivo `./src/models/Appointment.ts` importar a função `Entity`
+```typescript
+import { Entity } from 'typeorm';
+```
+- Habilitar novas configurações no arquivo `./tsconfig.json`
+  - Estas opções habilitam a utilização de `decorators` no typescript
+```json
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+```
+- Adicionar decorators para fazer a referencia entre o model `Appointment` e a tabela `appointments` do banco de dados
+  - Quando adicionamos decorators nas nossas classes e nas propriedades, não há necessidade do construtor, pois os decorator já fazem o papel de inicializar as propriedades.
+  - Abaixo serão citados os três decorators utilizados e qual o impacto na nossa rotina:
+    - `@Entity`: transforma a classe `Appointment` em uma referência da tabela `appointments`
+    - `PrimaryGeneratedColumn`: referencia a coluna `id` como chave primária
+    - `Column`: referencia as colunas `provider` e `date` com os seus respectivos tipos
+  - Segue copia do arquivo `./src/models/Appointment.ts`:
+```typescript
+import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+
+@Entity('appointments')
+class Appointment {
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
+
+  @Column()
+  provider: string;
+
+  @Column('timestamp with time zone')
+  date: Date;
+}
+
+export default Appointment;
+```
+- Desabilitar a propriedade `strictPropertyInitialization` do arquivo `./tsconfig.json` para não exigir a criação de construtores nas classes dos models, visto que estamos utilizados os decorators que já são responsáveis por isso.
 ---
 
 ## Tecnologias utilizadas
