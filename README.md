@@ -177,7 +177,7 @@ $ yarn dev:server
 ```
 - Criar uma `migration`
   - Para criar a migration `CreateAppointments`, digite o seguinte comando:
-    - Nessa migration será configurada a estrutura da nossa tabela `Appointment` quer será criada diretamento no nosso banco de dados.
+    - Nessa migration será configurada a estrutura da nossa tabela `appointments` quer será criada diretamento no nosso banco de dados.
 ```
 $ yarn typeorm migration:create -n CreateAppointments
 ```
@@ -185,8 +185,8 @@ $ yarn typeorm migration:create -n CreateAppointments
   - Ao executar o comando para criação da migration, a lib criou um arquivo dinamicamente com um prefixo numérico utilizado para versionar o arquivo e assim mantermos o controle de versão de tudo que foi criado ou modificado no banco de dados
   - No nosso caso, foi criado o seguinte arquivo `./src/database/migrations/1596771464635-CreateAppointments.ts`
   - Segue o conteúdo do arquivo, onde:
-    - o método `up` serve para criar a tabela
-    - o método `down` serve para desfazer o comando `up`, nesse caso, excluir a tabela
+    - o método `up` serve para subir as alterações no nosso banco de dados. Neste caso, vamos criar uma tabela `appointments`
+    - o método `down` serve para desfazer o comando `up`. Nesse caso, vamos excluir a tabela `appointments`
 ```typescript
 import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 
