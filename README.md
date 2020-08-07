@@ -118,6 +118,12 @@ $ yarn add typeorm pg
   - No menu `Connection > Using ormconfig.json` contém detalhes de como configurar essa lib.
   - Como já informado anteriormente, essa biblioteca tem como objetivo fazer o mapeamento das tabelas de um banco de dados relacional em forma de objeto JavaScript, ou seja, JSON.
   - Na raiz do projeto, crie o arquivo `ormconfig.json` com a seguinte configuração:
+    - `type`: nome do driver do banco de dados, no nosso caso, `postgres`
+    - `host`: nome do nosso servidor de banco de dados, em geral é parametrizado `localhost`. Se não funcionar, utilize o IP do docker onde o banco de dados está configurado, no meu caso `192.168.99.100`
+    - `port`: número da porta para acesso à imagem iniciada dentro do container do docker, no nosso caso, `5432`
+    - `username`: nome de usuário para acesso ao banco de dados, no nosso caso, `postgres`
+    - `password`: senha para acesso ao banco de dados, no nosso caso, `docker`
+    - `database`: nome do nosso banco de dados. Iremos criar o banco no próximo tópico, mas pra adiantar vamos deixar configurado como `gostack_gobarber`
 ```json
 {
   "type": "postgres",
@@ -149,6 +155,88 @@ import './database';
 - Iniciar o serviço para testar conexão
 ```
 $ yarn dev:server
+```
+
+#### Criando tabela de agendamentos
+- Configurar as `migrations`
+  - As `migrations` servem para criar as estruturas de tabelas dentro do banco de dados, sem precisar criar scripts SQL nativos. No caso, a biblioteca `typeorm` se encarrega disso levando em consideração o driver do banco de dado configurado previamente.
+  - Dentro do arquivo `./ormconfig.json`, criar uma propriedade chamada `migrations` com a seguinte configuração:
+```json
+  "migrations": [
+    "./src/database/migrations/*.ts"
+  ],
+  "cli": {
+    "migrationsDir": "./src/database/migrations"
+  }
+```
+- Criar um script para criar as `migrations`
+  - Abrir o arquivo `./package.json` e na sessão `scripts` criar a propriedade `typeorm` abaixo das demais propriedades
+  - Configurar o seguinte comando
+```json
+    "typeorm": "ts-node-dev ./node_modules/typeorm/cli.js"
+```
+- Criar uma `migration`
+  - Para criar a migration `CreateAppointments`, digite o seguinte comando:
+    - Nessa migration será configurada a estrutura da nossa tabela `Appointment` quer será criada diretamento no nosso banco de dados.
+```
+$ yarn typeorm migration:create -n CreateAppointments
+```
+- Configurar a `migration` de criação
+  - Ao executar o comando para criação da migration, a lib criou um arquivo dinamicamente com um prefixo numérico utilizado para versionar o arquivo e assim mantermos o controle de versão de tudo que foi criado ou modificado no banco de dados
+  - No nosso caso, foi criado o seguinte arquivo `./src/database/migrations/1596771464635-CreateAppointments.ts`
+  - Segue o conteúdo do arquivo, onde:
+    - o método `up` serve para criar a tabela
+    - o método `down` serve para desfazer o comando `up`, nesse caso, excluir a tabela
+```typescript
+import { MigrationInterface, QueryRunner, Table } from 'typeorm';
+
+export default class CreateAppointments1596771464635
+  implements MigrationInterface {
+  public async up(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.createTable(
+      new Table({
+        name: 'appointments',
+        columns: [
+          {
+            name: 'id',
+            type: 'varchar',
+            isPrimary: true,
+            generationStrategy: 'uuid',
+          },
+          {
+            name: 'provider',
+            type: 'varchar',
+            isNullable: false,
+          },
+          {
+            name: 'date',
+            type: 'timestamp with time zone',
+            isNullable: false,
+          },
+        ],
+      }),
+    );
+  }
+
+  public async down(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.dropTable('appointments');
+  }
+}
+```
+- Executar a `migration`
+  - Para executar todas as migrations que estiverem pendentes, digite o seguite comando:
+```
+$ yarn typeorm migration:run
+```
+- Reverter uma migration
+  - Se a migration criada ainda não foi commitada para o controle de versão onde outros devs tem acesso, é possível reverter a migration utilizando o seguinte comando:
+```
+$ yarn typeorm migration:revert
+```
+- Visualizar migrations executadas
+  - Para visualizar as migration executadas, utilize o seguinte comando:
+```
+$ yarn typeorm migration:show
 ```
 
 ---
