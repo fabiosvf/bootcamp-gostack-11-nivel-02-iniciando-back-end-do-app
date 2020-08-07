@@ -255,8 +255,8 @@ import { Entity } from 'typeorm';
   - Quando adicionamos decorators nas nossas classes e nas propriedades, não há necessidade do construtor, pois os decorator já fazem o papel de inicializar as propriedades.
   - Abaixo serão citados os três decorators utilizados e qual o impacto na nossa rotina:
     - `@Entity`: transforma a classe `Appointment` em uma referência da tabela `appointments`
-    - `PrimaryGeneratedColumn`: referencia a coluna `id` como chave primária
-    - `Column`: referencia as colunas `provider` e `date` com os seus respectivos tipos
+    - `@PrimaryGeneratedColumn`: referencia a coluna `id` como chave primária
+    - `@Column`: referencia as colunas `provider` e `date` com os seus respectivos tipos
   - Segue copia do arquivo `./src/models/Appointment.ts`:
 ```typescript
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
@@ -276,6 +276,7 @@ class Appointment {
 export default Appointment;
 ```
 - Desabilitar a propriedade `strictPropertyInitialization` do arquivo `./tsconfig.json` para não exigir a criação de construtores nas classes dos models, visto que estamos utilizados os decorators que já são responsáveis por isso.
+
 ---
 
 ## Tecnologias utilizadas
