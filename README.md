@@ -202,6 +202,7 @@ export default class CreateAppointments1596771464635
             type: 'varchar',
             isPrimary: true,
             generationStrategy: 'uuid',
+            default: 'uuid_generate_v4()',
           },
           {
             name: 'provider',
@@ -277,6 +278,62 @@ export default Appointment;
 ```
 - Desabilitar a propriedade `strictPropertyInitialization` do arquivo `./tsconfig.json` para não exigir a criação de construtores nas classes dos models, visto que estamos utilizados os decorators que já são responsáveis por isso.
 
+#### Repositório do TypeORM
+- Reestruturar todo o back-end para obter os repositórios diretamente do banco de dados
+  - Substituiremos a variável contendo um Array de repositórios em memória, por um Array de repositórios obtidos diretamente da base de dados
+- Instalar a biblioteca `reflect-metadata`
+```
+$ yarn add reflect-metadata
+```
+- Referenciar essa biblioteca recém instalada, no arquivo `./src/server.ts`
+```typescript
+import 'reflect-metadata';
+```
+- Adicionar referencia às models no arquivo de configuração `./ormconfig.json`
+```json
+  "entities": [
+    "./src/models/*.ts"
+  ],
+```
+- Refatorar a classe `./src/repositories/AppointmentsRepository.ts`
+  - Importar da lib `typorm` a função `EntityRepository` e a classe `Repository`
+```typescript
+import { EntityRepository, Repository } from 'typeorm';
+```
+- Excluir funções manuais
+  - Manter na classe `AppointmentsRepository` apenas a função `findByDate`
+  - As demais funções para criação e pesquisa de um `Appointment` serão herdadas da classe `Repository`
+- Estender a classe e inserir decorator
+    - Utilizar a classe `Repository` da lib `typeorm` para estender funcionalidades para a classe `AppointmentsRepository`
+    - O decorator `@EntityRepository(Appointment)` deverá ser colocado acima da classe `AppointmentsRepository`
+```typescript
+@EntityRepository(Appointment)
+class AppointmentsRepository extends Repository<Appointment>
+```
+- Refatorar a classe `./src/services/CreateAppointmentService.ts`
+  - Importar da lib `typeorm`, a função `getCustomRepository`
+```typescript
+import { getCustomRepository } from 'typeorm';
+```
+- Referenciar o nosso repositório dentro do serviço
+  - Apagar o construtor do serviço
+  - No início do método `execute`, referenciar o repositório
+```typescript
+const appointmentsRepository = getCustomRepository(AppointmentsRepository);
+```
+- Implementar o método para salvar o registro no banco de dados
+```typescript
+await appointmentsRepository.save(appointment);
+```
+- Refatorar o módulo de rota `./src/routes/appointments.routes.ts`
+  - Importar da lib `typeorm`, a função `getCustomRepository`
+```typescript
+import { getCustomRepository } from 'typeorm';
+```
+- Ajustar os metodos `get` e `post` da rota de forma a referenciar o nosso repositório.
+- Observação
+  - Não esquecer `async` e `await` durante a refatoração do código, pois como as funções de acesso ao banco de dados retornam uma promise, e as chamadas são assíncronas, precisamos aguardar a resposta para tomar uma decisão.
+
 ---
 
 ## Tecnologias utilizadas
@@ -285,6 +342,7 @@ export default Appointment;
 - [date-fns](https://yarnpkg.com/package/date-fns)
 - [express](https://yarnpkg.com/package/express)
 - [pg](https://yarnpkg.com/package/pg)
+- [reflect-metadata](https://yarnpkg.com/package/reflect-metadata)
 - [typeorm](https://yarnpkg.com/package/typeorm)
 - [uuidv4](https://yarnpkg.com/package/uuidv4)
 
