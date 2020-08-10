@@ -145,7 +145,7 @@ createConnection();
 - Criar o banco de dados `gostack_gobarber`
   - Abra a ferramenta `DBeaver`
   - Acesse o menu lateral esquerdo e clique com o botão direito do mouse sobre a conexão recentemente criada e selecione a opção `Create > Database`
-  - Na próxima janela, informe no campo `Database name` o nome do banco de dados, no nosso caso `gostack_gobarber` e clique em `OK`
+  - Na próxima janela, informe no campo `Database name` o nome do banco de dados, no nosso caso `gostack_gobarber`, e garanta que o campo `Encoding` esteja como `UTF8`, em seguida clique em `OK`
 - Implementar a chamada do banco de dados no arquivo `./src/server.ts`
 ```typescript
 ...
@@ -207,12 +207,20 @@ export default class CreateAppointments1596771464635
           {
             name: 'provider',
             type: 'varchar',
-            isNullable: false,
           },
           {
             name: 'date',
             type: 'timestamp with time zone',
-            isNullable: false,
+          },
+          {
+            name: 'created_at',
+            type: 'timestamp',
+            default: 'now()',
+          },
+          {
+            name: 'updated_at',
+            type: 'timestamp',
+            default: 'now()',
           },
         ],
       }),
@@ -260,7 +268,13 @@ import { Entity } from 'typeorm';
     - `@Column`: referencia as colunas `provider` e `date` com os seus respectivos tipos
   - Segue copia do arquivo `./src/models/Appointment.ts`:
 ```typescript
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 @Entity('appointments')
 class Appointment {
@@ -272,6 +286,12 @@ class Appointment {
 
   @Column('timestamp with time zone')
   date: Date;
+
+  @CreateDateColumn()
+  created_at: Date;
+
+  @UpdateDateColumn()
+  updated_at: Date;
 }
 
 export default Appointment;
@@ -333,6 +353,107 @@ import { getCustomRepository } from 'typeorm';
 - Ajustar os metodos `get` e `post` da rota de forma a referenciar o nosso repositório.
 - Observação
   - Não esquecer `async` e `await` durante a refatoração do código, pois como as funções de acesso ao banco de dados retornam uma promise, e as chamadas são assíncronas, precisamos aguardar a resposta para tomar uma decisão.
+
+### Cadastro de Usuários
+
+#### Model e migration de usuários
+- Criar novo arquivo migration para criação de usuários
+  - Para isso vamos precisar digitar o seguinte comando
+```
+$ yarn typeorm migration:create -n CreateUsers
+```
+- Criar a tabela de usuários
+  - No nosso caso, foi criado o seguinte arquivo `./src/database/migrations/1597050936937-CreateUsers.ts`
+  - Segue o conteúdo do arquivo, onde:
+    - o método `up` serve para subir as alterações no nosso banco de dados. Neste caso, vamos criar uma tabela `users`
+    - o método `down` serve para desfazer o comando `up`. Nesse caso, vamos excluir a tabela `users`
+```typescript
+import { MigrationInterface, QueryRunner, Table } from 'typeorm';
+
+export default class CreateUsers1597050936937 implements MigrationInterface {
+  public async up(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.createTable(
+      new Table({
+        name: 'users',
+        columns: [
+          {
+            name: 'id',
+            type: 'varchar',
+            isPrimary: true,
+            generationStrategy: 'uuid',
+            default: 'uuid_generate_v4()',
+          },
+          {
+            name: 'name',
+            type: 'varchar',
+          },
+          {
+            name: 'email',
+            type: 'varchar',
+            isUnique: true,
+          },
+          {
+            name: 'password',
+            type: 'varchar',
+          },
+          {
+            name: 'created_at',
+            type: 'timestamp',
+            default: 'now()',
+          },
+          {
+            name: 'updated_at',
+            type: 'timestamp',
+            default: 'now()',
+          },
+        ],
+      }),
+    );
+  }
+
+  public async down(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.dropTable('users');
+  }
+}
+```
+- Executar a `migration`
+  - Para executar todas as migrations que estiverem pendentes, digite o seguite comando:
+```
+$ yarn typeorm migration:run
+```
+- Criar o model `./src/models/User.ts`
+```typescript
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from 'typeorm';
+
+@Entity('users')
+class User {
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
+
+  @Column()
+  name: string;
+
+  @Column()
+  email: string;
+
+  @Column()
+  password: string;
+
+  @CreateDateColumn()
+  created_at: Date;
+
+  @UpdateDateColumn()
+  updated_at: Date;
+}
+
+export default User;
+```
 
 ---
 
