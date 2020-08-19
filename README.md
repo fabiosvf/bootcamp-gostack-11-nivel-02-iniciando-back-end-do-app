@@ -455,6 +455,67 @@ class User {
 export default User;
 ```
 
+#### Relacionamento nos models
+- Criar uma nova `migration` para alterar o nome e o tipo de um campo
+  - Para isso vamos precisar digitar o seguinte comando
+```
+$ yarn typeorm migration:create -n AlterProviderFieldToProviderId
+```
+- Criar o relacionamento entre as tabelas `appointments` e `users`
+  - Será necessário alterar o tipo do camnpo `id` de `varchar` para `uuid` nas duas tabelas através das `migrations` anteriores
+  - Lembrando que será necessário executar o comando para reverter as `migrations` até a primeira versão e em seguida executar o comando para criação de todas as `migrations`
+  - Segue o conteúdo do arquivo `./src/database/migrations/1597802544033-AlterProviderFieldToProviderId.ts`
+```typescript
+import {
+  MigrationInterface,
+  QueryRunner,
+  TableColumn,
+  TableForeignKey,
+} from 'typeorm';
+
+export default class AlterProviderFieldToProviderId1597802544033
+  implements MigrationInterface {
+  public async up(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.dropColumn('appointments', 'provider');
+
+    await queryRunner.addColumn(
+      'appointments',
+      new TableColumn({
+        name: 'provider_id',
+        type: 'uuid',
+        isNullable: true,
+      }),
+    );
+
+    await queryRunner.createForeignKey(
+      'appointments',
+      new TableForeignKey({
+        name: 'AppointmentProvider',
+        columnNames: ['provider_id'],
+        referencedColumnNames: ['id'],
+        referencedTableName: 'users',
+        onDelete: 'SET NULL', // RESTRICT | SET NULL | CASCADE
+        onUpdate: 'CASCADE',
+      }),
+    );
+  }
+
+  public async down(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.dropForeignKey('appointments', 'AppointmentProvider');
+
+    await queryRunner.dropColumn('appointments', 'provider_id');
+
+    await queryRunner.addColumn(
+      'appointments',
+      new TableColumn({
+        name: 'provider',
+        type: 'varchar',
+      }),
+    );
+  }
+}
+```
+
 ---
 
 ## Tecnologias utilizadas
