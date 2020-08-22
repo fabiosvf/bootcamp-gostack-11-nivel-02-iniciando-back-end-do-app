@@ -532,6 +532,15 @@ $ yarn add -D @types/bcryptjs
 - Alterar o arquivo `./src/services/CreateUserService.ts` para implementar a criptografia
 - Alterar o arquivo `./src/routes/users.routes.ts` para excluir do `json` de retorno, a propriedade `password` já criptografada.
 
+### Autenticação
+
+#### Conceitos de JWT
+- Significado de JWT
+  - É uma metodologia de fazer autenticação em APIs REST, que são esses serviços RESTFUL, que se comunicam através de JSON
+  - Em uma aplicação MVC utilizamos a autenticação no formato de sessão
+  - Agora, dentro do conceito de API REST iremos utilizar o JWT
+  - JWT é um acrônimo para Json Web Token, um token em forma de JSON
+
 ---
 
 ## Tecnologias utilizadas
