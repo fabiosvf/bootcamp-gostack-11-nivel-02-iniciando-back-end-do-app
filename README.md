@@ -515,6 +515,10 @@ export default class AlterProviderFieldToProviderId1597802544033
   }
 }
 ```
+#### Relacionamento nos models
+- Criar o arquivo `./src/routes/users.routes.ts` para tratar das rotas de usuários
+- Ajustar o arquivo `./src/routes/index.ts` para implementar o arquivo de rotas de usuários
+- Alterar a rota `./src/routes/appointments.routes.ts` e o serviço `./src/services/CreateAppointmentService.ts` para receber o id do usuário ao invés de uma simples descrição.
 
 ---
 
