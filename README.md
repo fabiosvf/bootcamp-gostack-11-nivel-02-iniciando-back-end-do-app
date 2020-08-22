@@ -541,6 +541,11 @@ $ yarn add -D @types/bcryptjs
   - Agora, dentro do conceito de API REST iremos utilizar o JWT
   - JWT é um acrônimo para Json Web Token, um token em forma de JSON
 
+#### Validando credenciais
+- Criar o arquivo `./src/routes/sessions.routes.ts` para gerenciar as rotas de autenticação
+- Alterar o arquivo `./src/routes/index.ts` para implementar a chamada a rota de Sessão
+- Criar o arquivo `./src/services/AuthenticateUserService.ts` para implementar o serviço de autenticação
+
 ---
 
 ## Tecnologias utilizadas
