@@ -1,5 +1,6 @@
 import { getRepository } from 'typeorm';
 import { compare } from 'bcryptjs';
+import { sign } from 'jsonwebtoken';
 
 import User from '../models/User';
 
@@ -10,6 +11,7 @@ interface Request {
 
 interface Response {
   user: User;
+  token: string;
 }
 
 class AuthenticateUserService {
@@ -22,19 +24,21 @@ class AuthenticateUserService {
       throw new Error('Incorrect email/password combination.');
     }
 
-    // user.password = Senha criptografada
-    // password = Senha não-criptografada
-
     const passwordMatched = await compare(password, user.password);
 
     if (!passwordMatched) {
       throw new Error('Incorrect email/password combination.');
     }
 
-    // Usuário autenticado
+    // md5.cz
+    const token = sign({}, '6fe4bac65fbed167cfad98178c8c267b', {
+      subject: user.id,
+      expiresIn: '1d',
+    });
 
     return {
       user,
+      token,
     };
   }
 }

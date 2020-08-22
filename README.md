@@ -546,6 +546,21 @@ $ yarn add -D @types/bcryptjs
 - Alterar o arquivo `./src/routes/index.ts` para implementar a chamada a rota de Sessão
 - Criar o arquivo `./src/services/AuthenticateUserService.ts` para implementar o serviço de autenticação
 
+#### Gerando token JWT
+- Instalar a biblioteca `jsonwebtoken`
+```
+$ yarn add jsonwebtoken
+```
+- Instalar a biblioteca de tipos `@types/jsonwebtoken`
+```
+$ yarn add -D @types/jsonwebtoken
+```
+- Alterar o arquivo `./src/services/AuthenticateUserService.ts` para implementar a geração de token com o JWT
+- Acessar o site [md5.cz](http://www.md5.cz/) e gerar um HASH MD5 para utilizar na geração do token JWT
+- Alterar o arquivo `./src/routes/sessions.routes.ts` para implementar a passagem do token JWT como parâmetro
+- Validar o token gerado
+  - Acesse o site [jwt.io](https://jwt.io/) para validar o token gerado
+
 ---
 
 ## Tecnologias utilizadas
@@ -554,6 +569,7 @@ $ yarn add -D @types/bcryptjs
 - [bcryptjs](https://yarnpkg.com/package/bcryptjs)
 - [date-fns](https://yarnpkg.com/package/date-fns)
 - [express](https://yarnpkg.com/package/express)
+- [jsonwebtoken](https://yarnpkg.com/package/jsonwebtoken)
 - [pg](https://yarnpkg.com/package/pg)
 - [reflect-metadata](https://yarnpkg.com/package/reflect-metadata)
 - [typeorm](https://yarnpkg.com/package/typeorm)
@@ -562,6 +578,7 @@ $ yarn add -D @types/bcryptjs
 #### Dependências de Desenvolvimento
 - [@types/bcryptjs](https://yarnpkg.com/package/@types/bcryptjs)
 - [@types/express](https://yarnpkg.com/package/@types/express)
+- [@types/jsonwebtoken](https://yarnpkg.com/package/@types/jsonwebtoken)
 - [@typescript-eslint/eslint-plugin](https://yarnpkg.com/package/@typescript-eslint/eslint-plugin)
 - [@typescript-eslint/parser](https://yarnpkg.com/package/@typescript-eslint/parser)
 - [eslint](https://yarnpkg.com/package/eslint)
