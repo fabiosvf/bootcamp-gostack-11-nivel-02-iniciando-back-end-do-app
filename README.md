@@ -515,16 +515,29 @@ export default class AlterProviderFieldToProviderId1597802544033
   }
 }
 ```
-#### Relacionamento nos models
+#### Criação de registros
 - Criar o arquivo `./src/routes/users.routes.ts` para tratar das rotas de usuários
 - Ajustar o arquivo `./src/routes/index.ts` para implementar o arquivo de rotas de usuários
 - Alterar a rota `./src/routes/appointments.routes.ts` e o serviço `./src/services/CreateAppointmentService.ts` para receber o id do usuário ao invés de uma simples descrição.
+
+#### Criptografia de senha
+- Instalar a biblioteca `bcryptjs` para criptografia de senha
+```
+$ yarn add bcryptjs
+```
+- Instalar a biblioteca de tipos `@types/bcryptjs` como dependência de desenvolvimento
+```
+$ yarn add -D @types/bcryptjs
+```
+- Alterar o arquivo `./src/services/CreateUserService.ts` para implementar a criptografia
+- Alterar o arquivo `./src/routes/users.routes.ts` para excluir do `json` de retorno, a propriedade `password` já criptografada.
 
 ---
 
 ## Tecnologias utilizadas
 
 #### Dependências de Projeto
+- [bcryptjs](https://yarnpkg.com/package/bcryptjs)
 - [date-fns](https://yarnpkg.com/package/date-fns)
 - [express](https://yarnpkg.com/package/express)
 - [pg](https://yarnpkg.com/package/pg)
@@ -533,6 +546,7 @@ export default class AlterProviderFieldToProviderId1597802544033
 - [uuidv4](https://yarnpkg.com/package/uuidv4)
 
 #### Dependências de Desenvolvimento
+- [@types/bcryptjs](https://yarnpkg.com/package/@types/bcryptjs)
 - [@types/express](https://yarnpkg.com/package/@types/express)
 - [@typescript-eslint/eslint-plugin](https://yarnpkg.com/package/@typescript-eslint/eslint-plugin)
 - [@typescript-eslint/parser](https://yarnpkg.com/package/@typescript-eslint/parser)
