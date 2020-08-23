@@ -617,6 +617,12 @@ $ yarn add -D @types/multer
 - Criar o arquivo `./src/config/upload.ts` para armazenar as configurações do upload de arquivo
 - Alterar o arquivo `./src/routes/users.routes.ts` para implementar o upload do arquivo referente ao avatar do usuário na pasta temporária
 
+#### Atualizando avatar
+- Criar o arquivo `./src/services/UpdateUserAvatarService.ts` para compor o serviço de atualização do caminho da imagem do avatar do usuário, no banco de dados
+- Criar a coluna `avatar` no model `./src/models/User.ts`
+- Alterar o arquivo `./src/config/upload.ts` para implementar a propriedade `directory` afim de expo-la através do middleware para que o serviço `./src/services/UpdateUserAvatarService.ts` possa visualizar
+- Implementar a rota de alteração de avatar a partir do arquivo `./src/routes/users.routes.ts`
+
 ---
 
 ## Tecnologias utilizadas
