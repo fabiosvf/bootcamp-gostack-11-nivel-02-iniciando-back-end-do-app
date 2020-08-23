@@ -561,6 +561,17 @@ $ yarn add -D @types/jsonwebtoken
 - Validar o token gerado
   - Acesse o site [jwt.io](https://jwt.io/) para validar o token gerado
 
+#### Rotas autenticadas
+- Criar um middleware de autenticação
+  - O token JWT gerado será passado como parâmetro através do HEADER das requisições
+  - Adicionar a chave `Authorization` como parâmetro do Header da requisição
+  - Utilizar o prefixo `Bearer` antes de informar o token JWT como parâmetro da chave `Authorization`
+- Criar o arquivo `./src/middlewares/ensureAuthenticated.ts` para implementar uma verificação se o usuário está autenticado na aplicação
+- Criar o arquivo `./src/config/auth.ts` para centralizar as configurações de autenticação que serão utilizadas em mais de um arquivo dentro da aplicação
+- Alterar o arquivo `./src/services/AuthenticateUserService.ts` para utilizar os parâmetros via arquivo de configuração recém criado
+- Alterar o arquivo `./src/routes/appointments.routes.ts` para implementar o middleware recém criado
+- Criar o arquivo `./src/@types/express.d.ts` para permitir incluir a propriedade `user` no tipo `Request` da biblioteca `express`
+
 ---
 
 ## Tecnologias utilizadas
