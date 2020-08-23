@@ -625,7 +625,14 @@ $ yarn add -D @types/multer
 
 #### Servindo arquivos estáticos
 - Alterar o arquivo `./src/server.ts` para expor uma rota estática para que o usuário consiga visualizar os arquivos de imagens dos avatares que foram carregados
-  - Essa rota será exposta de forma estática
+
+### Tratando exceções
+
+#### Criando classe de erro
+- Criar o arquivo `./src/erros/AppError.ts` para tratar os erros da nossa aplicação
+  - Essa primeira classe de erro, visa tratar as exceções relacionadas ao fluxo padrão da aplicação envolvendo as rotas, como a requisição, a resposta e todos os erros que acontecem nesse fluxo
+- Alterar os arquivos de serviços `./src/services/AuthenticateUserService.ts`, `./src/services/CreateAppointmentService.ts`, `./src/services/CreateUserService.ts`, `./src/services/UpdateUserAvatarService.ts` e o arquivo de middleware `./src/middlewares/ensureAuthenticated.ts`, substituindo a classe padrão para tratamento de exceções `Error`, pela nova classe recém criada `AppError` onde será possível passar como parâmetro o `statusCode` da requisição `HTTP`
+- Alterar o arquivo de rota `./src/routes/sessions.routes.ts` para interceptar e obter da variável `err` do bloco `catch` no tratamento de exceção das requisições, a propriedade `statusCode`
 
 ---
 
