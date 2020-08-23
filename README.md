@@ -634,6 +634,19 @@ $ yarn add -D @types/multer
 - Alterar os arquivos de serviços `./src/services/AuthenticateUserService.ts`, `./src/services/CreateAppointmentService.ts`, `./src/services/CreateUserService.ts`, `./src/services/UpdateUserAvatarService.ts` e o arquivo de middleware `./src/middlewares/ensureAuthenticated.ts`, substituindo a classe padrão para tratamento de exceções `Error`, pela nova classe recém criada `AppError` onde será possível passar como parâmetro o `statusCode` da requisição `HTTP`
 - Alterar o arquivo de rota `./src/routes/sessions.routes.ts` para interceptar e obter da variável `err` do bloco `catch` no tratamento de exceção das requisições, a propriedade `statusCode`
 
+#### Lidando com erros
+- Instalar a biblioteca `express-async-errors`
+  - Essa biblioteca serve para permitir que interceptemos os erros nas rotas assíncronas
+```
+$ yarn add express-async-errors
+```
+- Alterar o arquivo `./src/server.ts` para interceptar todos os erros da nossa aplicação.
+  - O tratamento desses erros será feito individualmente nas classes de erros criadas a partir do caminho `./src/erros`. No momento estamos tratando as exceções apenas no que corresponde às rotas e requisições em geral a partir do arquivo `./src/erros/AppError.ts`. Lembrando que outras classes para tratamento de erros serão criadas no decorrer do desenvolvimento dessa aplicação.
+- Remover dos arquivos de rota `./src/routes/appointments.routes.ts`, `./src/routes/sessions.routes.ts` e `./src/routes/users.routes.ts` toda a parte do código que intercepta e trata a resposta do erro. Agora, esse trabalho será feito pelo nosso middleware global em `./src/server.ts`.
+- Configurar o ESLint para ignorar variáveis de parâmetros definidas como `_`
+  - Foi necessário essa implementação para o tratamento global de exceção no arquivo `./src/server.ts`, porque o método `use` espera um `callback` com 4 parâmetros, e o último parâmetro não será usado.
+  - A configuração foi feita no arquivo `./.eslintrc.json` para o ESLint não acusar o erro `is defined but never used`.
+
 ---
 
 ## Tecnologias utilizadas
@@ -642,6 +655,7 @@ $ yarn add -D @types/multer
 - [bcryptjs](https://yarnpkg.com/package/bcryptjs)
 - [date-fns](https://yarnpkg.com/package/date-fns)
 - [express](https://yarnpkg.com/package/express)
+- [express-async-errors](https://yarnpkg.com/package/express-async-errors)
 - [jsonwebtoken](https://yarnpkg.com/package/jsonwebtoken)
 - [multer](https://yarnpkg.com/package/multer)
 - [pg](https://yarnpkg.com/package/pg)
