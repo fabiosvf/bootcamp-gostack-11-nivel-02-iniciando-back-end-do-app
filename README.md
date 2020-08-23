@@ -572,6 +572,51 @@ $ yarn add -D @types/jsonwebtoken
 - Alterar o arquivo `./src/routes/appointments.routes.ts` para implementar o middleware recém criado
 - Criar o arquivo `./src/@types/express.d.ts` para permitir incluir a propriedade `user` no tipo `Request` da biblioteca `express`
 
+### Upload de imagens
+
+#### Upload de arquivos
+- Criar um novo arquivo de `migration` para adicionar um campo novo onde será armazenado o avatar do usuário
+```
+$ yarn typeorm migration:create -n AddAvatarFieldToUsers
+```
+- Alterar o arquivo recém criado com o seguinte conteúdo:
+```typescript
+import { MigrationInterface, QueryRunner, TableColumn } from 'typeorm';
+
+export default class AddAvatarFieldToUsers1598151643445
+  implements MigrationInterface {
+  public async up(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.addColumn(
+      'users',
+      new TableColumn({
+        name: 'avatar',
+        type: 'varchar',
+        isNullable: true,
+      }),
+    );
+  }
+
+  public async down(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.dropColumn('users', 'avatar');
+  }
+}
+```
+- Aplicar as alterações no banco de dados
+  - Para aplicar as alterações na base de dados, digite o seguinte comando:
+```
+$ yarn typeorm migration:run
+```
+- Instalar a biblioteca `multer` para trabalharmos com upload de arquivos
+```
+$ yarn add multer
+```
+- Instalar a biblioteca de tipos `@types/multer`
+```
+$ yarn add -D @types/multer
+```
+- Criar o arquivo `./src/config/upload.ts` para armazenar as configurações do upload de arquivo
+- Alterar o arquivo `./src/routes/users.routes.ts` para implementar o upload do arquivo referente ao avatar do usuário na pasta temporária
+
 ---
 
 ## Tecnologias utilizadas
@@ -581,6 +626,7 @@ $ yarn add -D @types/jsonwebtoken
 - [date-fns](https://yarnpkg.com/package/date-fns)
 - [express](https://yarnpkg.com/package/express)
 - [jsonwebtoken](https://yarnpkg.com/package/jsonwebtoken)
+- [multer](https://yarnpkg.com/package/multer)
 - [pg](https://yarnpkg.com/package/pg)
 - [reflect-metadata](https://yarnpkg.com/package/reflect-metadata)
 - [typeorm](https://yarnpkg.com/package/typeorm)
@@ -590,6 +636,7 @@ $ yarn add -D @types/jsonwebtoken
 - [@types/bcryptjs](https://yarnpkg.com/package/@types/bcryptjs)
 - [@types/express](https://yarnpkg.com/package/@types/express)
 - [@types/jsonwebtoken](https://yarnpkg.com/package/@types/jsonwebtoken)
+- [@types/multer](https://yarnpkg.com/package/@types/multer)
 - [@typescript-eslint/eslint-plugin](https://yarnpkg.com/package/@typescript-eslint/eslint-plugin)
 - [@typescript-eslint/parser](https://yarnpkg.com/package/@typescript-eslint/parser)
 - [eslint](https://yarnpkg.com/package/eslint)

@@ -1,3 +1,6 @@
 /*.js
 dist
 node_modules
+
+tmp/*
+!tmp/.gitkeep
