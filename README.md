@@ -623,6 +623,10 @@ $ yarn add -D @types/multer
 - Alterar o arquivo `./src/config/upload.ts` para implementar a propriedade `directory` afim de expo-la através do middleware para que o serviço `./src/services/UpdateUserAvatarService.ts` possa visualizar
 - Implementar a rota de alteração de avatar a partir do arquivo `./src/routes/users.routes.ts`
 
+#### Servindo arquivos estáticos
+- Alterar o arquivo `./src/server.ts` para expor uma rota estática para que o usuário consiga visualizar os arquivos de imagens dos avatares que foram carregados
+  - Essa rota será exposta de forma estática
+
 ---
 
 ## Tecnologias utilizadas
