@@ -647,12 +647,20 @@ $ yarn add express-async-errors
   - Foi necessário essa implementação para o tratamento global de exceção no arquivo `./src/server.ts`, porque o método `use` espera um `callback` com 4 parâmetros, e o último parâmetro não será usado.
   - A configuração foi feita no arquivo `./.eslintrc.json` para o ESLint não acusar o erro `is defined but never used`.
 
+### Acesso Externo
+
+#### Liberando API para acesso externo
+- Instalar a biblioteca `cors`
+```
+$ yarn add cors
+```
 ---
 
 ## Tecnologias utilizadas
 
 #### Dependências de Projeto
 - [bcryptjs](https://yarnpkg.com/package/bcryptjs)
+- [cors](https://yarnpkg.com/package/cors)
 - [date-fns](https://yarnpkg.com/package/date-fns)
 - [express](https://yarnpkg.com/package/express)
 - [express-async-errors](https://yarnpkg.com/package/express-async-errors)
